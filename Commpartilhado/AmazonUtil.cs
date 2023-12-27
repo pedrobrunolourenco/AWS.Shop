@@ -8,6 +8,7 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Newtonsoft.Json;
 using static System.Net.WebRequestMethods;
+using Amazon.Lambda.Core;
 
 namespace Compartilhado
 {
@@ -45,10 +46,24 @@ namespace Compartilhado
             await client.SendMessageAsync(request);
         }
 
-        public static async Task EnviarParaFila(EnumFilasSNS fila, Pedido pedido)
+        public static async Task EnviarParaFila(EnumFilasSNS fila, Pedido pedido, ILambdaContext context)
         {
+            context.Logger.LogLine("ENTREI AQUI 02");
+
             // Implementar
-            await Task.CompletedTask;
+            var client = new AmazonSQSClient(RegionEndpoint.SAEast1);
+
+            var json = JsonConvert.SerializeObject(pedido);
+
+            var request = new SendMessageRequest
+            {
+                QueueUrl = $"https://sqs.sa-east-1.amazonaws.com/390428001522/{fila}",
+                MessageBody = json
+            };
+
+            await client.SendMessageAsync(request);
+            context.Logger.LogLine("ENTREI AQUI 03");
+
         }
 
 

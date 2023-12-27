@@ -29,11 +29,13 @@ public class Function
                 }
                 catch (Exception ex)
                 {
+                    context.Logger.LogLine("ENTREI AQUI 01");
+
                     context.Logger.LogLine($"Erro => {ex.Message}");
                     pedido.JustificativaDeCancelamento = ex.Message;
                     pedido.Status = StatusDoPedido.Falha;
                     pedido.Cancelado = true;
-                    await AmazonUtil.EnviarParaFila(EnumFilasSNS.falha, pedido);
+                    await AmazonUtil.EnviarParaFila(EnumFilasSNS.falha, pedido, context);
                 }
                 await pedido.SalvarAsync();
             }
