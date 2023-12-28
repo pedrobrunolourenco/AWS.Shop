@@ -26,7 +26,6 @@ namespace Compartilhado
         {
             var client = new AmazonDynamoDBClient(RegionEndpoint.SAEast1);
             var context = new DynamoDBContext(client);
-
             var doc = Document.FromAttributeMap(dictionary);
             return context.FromDocument<T>(doc);
         }
@@ -46,11 +45,8 @@ namespace Compartilhado
             await client.SendMessageAsync(request);
         }
 
-        public static async Task EnviarParaFila(EnumFilasSNS fila, Pedido pedido, ILambdaContext context)
+        public static async Task EnviarParaFila(EnumFilasSNS fila, Pedido pedido)
         {
-            context.Logger.LogLine("ENTREI AQUI 02");
-
-            // Implementar
             var client = new AmazonSQSClient(RegionEndpoint.SAEast1);
 
             var json = JsonConvert.SerializeObject(pedido);
@@ -60,10 +56,7 @@ namespace Compartilhado
                 QueueUrl = $"https://sqs.sa-east-1.amazonaws.com/390428001522/{fila}",
                 MessageBody = json
             };
-
             await client.SendMessageAsync(request);
-            context.Logger.LogLine("ENTREI AQUI 03");
-
         }
 
 
