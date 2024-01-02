@@ -35,7 +35,7 @@ public class Function
                     pedido.JustificativaDeCancelamento = ex.Message;
                     pedido.Status = StatusDoPedido.Falha;
                     pedido.Cancelado = true;
-                    await AmazonUtil.EnviarParaFila(EnumFilasSNS.falha, pedido, context);
+                    await AmazonUtil.EnviarParaFila(EnumFilasSNS.falha, pedido);
                 }
                 await pedido.SalvarAsync();
             }
